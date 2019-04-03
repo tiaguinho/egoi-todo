@@ -1,0 +1,22 @@
+<form [formGroup]="addForm">
+  <mat-form-field>
+    <mat-label>Priority</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let priority of priorities" [value]="priority">
+        {{ priority.text }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Title" formControlName="title" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Description" formControlName="description" />
+  </mat-form-field>
+
+  <mat-checkbox formControlName="done">Done!</mat-checkbox>
+
+  <button mat-raised-button [disabled]="addForm.invalid">Submit</button>
+</form>
