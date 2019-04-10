@@ -1,0 +1,31 @@
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Priority</th>
+      <th>Description</th>
+      <th>Done</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let todo of todos">
+      <td>{{ todo.id }}</td>
+      <td [ngStyle]="{ 'background-color': todo.priority.color }">{{ todo.priority.text }}</td>
+      <td>{{ todo.title }}</td>
+      <td>{{ todo.description }}</td>
+      <td>
+        <ng-container *ngIf="todo.done; else notDone">S</ng-container>
+        <ng-template #notDone>
+          N
+        </ng-template>
+      </td>
+      <td>
+        <button (click)="edit(todo.id)">Edit</button>
+        <button (click)="remove(todo.id)">Remove</button>
+        <button *ngIf="!todo.done">Mark as Done</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
