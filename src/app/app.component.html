@@ -1,3 +1,10 @@
 <add-todo></add-todo>
 
-<router-outlet></router-outlet>
+<hr />
+
+<list-todo (onEditClick)="selectedID = $event"></list-todo>
+
+<hr />
+
+<edit-todo [id]="selectedID"></edit-todo>
+<!---router-outlet></router-outlet-->
