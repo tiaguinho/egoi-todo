@@ -11,7 +11,7 @@ export class TodoService {
 
   add(todo: Todo): void {
     todo.id = this._count++;
-    this._list.push(todo);
+    this._list.push({ ...todo });
   }
 
   edit(id: number, todo: Todo): void {
