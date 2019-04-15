@@ -1,3 +1,42 @@
-<p>
-  {{ selectedID }}
-</p>
+<form [formGroup]="editForm" (ngSubmit)="submit(editForm)">
+  <input type="hidden" formControlName="id" />
+  <mat-form-field>
+    <mat-label>Priority</mat-label>
+    <mat-select formControlName="priority">
+      <mat-option *ngFor="let priority of priorities" [value]="priority">
+        {{ priority.text }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <ng-container *ngIf="priority.errors && (priority.touched || priority.dirty)">
+    <small *ngIf="priority.errors.required">Campo obrigatório</small>
+  </ng-container>
+
+  <br />
+
+  <mat-form-field>
+    <input matInput placeholder="Title" formControlName="title" />
+  </mat-form-field>
+
+  <ng-container *ngIf="title.errors && (title.touched && title.dirty)">
+    <small *ngIf="title.errors.required">Campo obrigatório</small>
+    <small *ngIf="title.errors.minlength">Minimo 5 caracteres</small>
+  </ng-container>
+
+  <br />
+
+  <mat-form-field>
+    <input matInput placeholder="Description" formControlName="description" />
+  </mat-form-field>
+  <ng-container *ngIf="description.errors && (description.touched || description.dirty)">
+    <small *ngIf="description.errors.required">Campo obrigatório</small>
+  </ng-container>
+
+  <br />
+
+  <mat-checkbox formControlName="done">Done!</mat-checkbox>
+
+  <br />
+
+  <button mat-raised-button [disabled]="editForm.invalid">Submit</button>
+</form>
