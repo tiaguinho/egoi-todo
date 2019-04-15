@@ -1,4 +1,7 @@
-<table>
+<a href="/todo/add">New Todo</a>
+<hr />
+
+<table width="100%">
   <thead>
     <tr>
       <th>ID</th>
@@ -10,7 +13,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let todo of todos">
+    <tr *ngFor="let todo of (todos$ | async)">
       <td>{{ todo.id }}</td>
       <td [ngStyle]="{ 'background-color': todo.priority.color }">{{ todo.priority.text }}</td>
       <td>{{ todo.title }}</td>
@@ -24,7 +27,7 @@
       <td>
         <button (click)="edit(todo.id)">Edit</button>
         <button (click)="remove(todo.id)">Remove</button>
-        <button *ngIf="!todo.done">Mark as Done</button>
+        <button (click)="markAsDone(todo.id)" *ngIf="!todo.done">Mark as Done</button>
       </td>
     </tr>
   </tbody>
