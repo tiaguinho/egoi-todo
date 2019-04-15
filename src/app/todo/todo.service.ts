@@ -1,33 +1,41 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Todo } from './todo.interface';
 
 @Injectable()
 export class TodoService {
   private _count: number = 1;
 
-  private _list: Todo[] = [];
+  private _list: BehaviorSubject<Todo[]> = new BehaviorSubject([]);
 
   constructor() {}
 
   add(todo: Todo): void {
     todo.id = this._count++;
-    this._list.push({ ...todo });
+    const items = this._list.getValue();
+    items.push({ ...todo });
+
+    this._list.next(items);
   }
 
-  edit(id: number, todo: Todo): void {
-    const index = this._list.findIndex(item => item.id === id);
-    this._list[index] = todo;
+  edit(id: number, changes: Partial<Todo>): void {
+    const items = this._list.getValue();
+    const index = items.findIndex(item => item.id === id);
+    items[index] = { ...items[index], ...changes };
+
+    this._list.next(items);
   }
 
   remove(id: number): void {
-    this._list = this._list.filter(item => item.id !== id);
+    const items = this._list.getValue().filter(item => item.id !== id);
+    this._list.next(items);
   }
 
-  get(id: number): Todo {
-    return this._list.find(item => item.id === id);
+  getTodo(id: number): Todo {
+    return this._list.getValue().find(item => item.id === id);
   }
 
-  list(): Todo[] {
-    return this._list;
+  list(): Observable<Todo[]> {
+    return this._list.asObservable();
   }
 }
