@@ -1,9 +1,10 @@
 export interface Todo {
-  id: number;
+  id: string;
   title: string;
   priority: Priority;
   description: string;
   done: boolean;
+  created?: number;
 }
 
 interface Priority {
