@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 // import { Subscription } from 'rxjs';
 import { Todo } from '../todo.interface';
@@ -19,10 +20,12 @@ export class ListTodoComponent implements OnInit, OnDestroy {
 
   @Output() onEditClick = new EventEmitter();
 
-  constructor(private todo: TodoService) {}
+  constructor(private todo: TodoService, private router: Router) {}
 
   ngOnInit() {
     //this.subscription = this.todo.list().subscribe(items => (this.todos = items));
+    this.todo.load();
+
     this.todos$ = this.todo.list();
   }
 
@@ -34,15 +37,17 @@ export class ListTodoComponent implements OnInit, OnDestroy {
     */
   }
 
-  remove(id: number): void {
-    this.todo.remove(id);
+  remove(id: string): void {
+    this.todo.remove(id).subscribe(resp => {
+      console.log(resp);
+    });
   }
 
   edit(id: number): void {
-    this.onEditClick.emit(id);
+    this.router.navigate(['todo', 'edit', id]);
   }
 
-  markAsDone(id: number): void {
+  markAsDone(id: string): void {
     this.todo.edit(id, { done: true });
   }
 }

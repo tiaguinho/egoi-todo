@@ -1,5 +1,6 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { priorities } from '../todo.interface';
 import { TodoService } from '../todo.service';
 
@@ -8,16 +9,7 @@ import { TodoService } from '../todo.service';
   templateUrl: './edit-todo.component.html',
   styleUrls: ['./edit-todo.component.scss'],
 })
-export class EditTodoComponent implements OnInit, OnChanges {
-  @Input('id')
-  set selectedID(id: number) {
-    this._selecteID = id;
-  }
-  get selectedID(): number {
-    return this._selecteID;
-  }
-  private _selecteID: number;
-
+export class EditTodoComponent implements OnInit {
   public priorities = priorities;
 
   get priority() {
@@ -32,29 +24,41 @@ export class EditTodoComponent implements OnInit, OnChanges {
 
   editForm: FormGroup;
 
-  constructor(private todo: TodoService, private fb: FormBuilder) {}
+  constructor(
+    private todo: TodoService,
+    private fb: FormBuilder,
+    private router: Router,
+    private activatedRouter: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-    this.editForm = this.fb.group({
-      id: [''],
-      priority: ['', Validators.required],
-      title: ['', [Validators.minLength(5), Validators.required]],
-      description: ['', Validators.required],
-      done: [false],
+    this.activatedRouter.params.subscribe(params => {
+      this.editForm = this.fb.group({
+        id: [''],
+        priority: ['', Validators.required],
+        title: ['', [Validators.minLength(5), Validators.required]],
+        description: ['', Validators.required],
+        created: false,
+        done: [false],
+      });
+
+      this.todo
+        .getTodo(params['id'])
+        .subscribe(todo => this.editForm.setValue(todo), () => this.router.navigate(['todo']));
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['selectedID'].currentValue) {
-      const todo = this.todo.getTodo(this._selecteID);
-      this.editForm.setValue(todo);
-    }
+  selected(option, selected): boolean {
+    return option.type === selected.type;
   }
 
   submit({ value, valid }): void {
     if (valid) {
-      this.todo.edit(this._selecteID, value);
-      this.editForm.reset();
+      this.todo.edit(value.id, value).subscribe(todo => {
+        if (todo) {
+          this.router.navigate(['todo']);
+        }
+      });
     }
   }
 }

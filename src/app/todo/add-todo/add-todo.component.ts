@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { priorities } from '../todo.interface';
 import { TodoService } from '../todo.service';
 
@@ -23,7 +24,7 @@ export class AddTodoComponent implements OnInit {
     return this.addForm.get('description');
   }
 
-  constructor(private fb: FormBuilder, private todo: TodoService) {}
+  constructor(private fb: FormBuilder, private todo: TodoService, private router: Router) {}
 
   ngOnInit() {
     this.addForm = this.fb.group({
@@ -36,8 +37,11 @@ export class AddTodoComponent implements OnInit {
 
   submit({ value, valid }): void {
     if (valid) {
-      this.todo.add(value);
-      this.addForm.reset();
+      this.todo.add(value).subscribe(resp => {
+        if (resp.id) {
+          this.router.navigate(['todo']);
+        }
+      });
     }
   }
 }

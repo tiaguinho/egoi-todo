@@ -1,8 +1,11 @@
+<a routerLink="/todo">List Todos</a>
+<hr />
+
 <form [formGroup]="editForm" (ngSubmit)="submit(editForm)">
   <input type="hidden" formControlName="id" />
   <mat-form-field>
     <mat-label>Priority</mat-label>
-    <mat-select formControlName="priority">
+    <mat-select formControlName="priority" [compareWith]="selected">
       <mat-option *ngFor="let priority of priorities" [value]="priority">
         {{ priority.text }}
       </mat-option>
