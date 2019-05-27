@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Todo } from './todo.interface';
-
-type HashTable = { [id: string]: Todo };
+import { HashTable, Todo } from './todo.interface';
 
 /**
  * ENDPOINTS

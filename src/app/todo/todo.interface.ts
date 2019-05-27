@@ -18,3 +18,5 @@ export const priorities: Priority[] = [
   { type: 'medium', text: 'Medium', color: 'yellow' },
   { type: 'low', text: 'Low' },
 ];
+
+export type HashTable = { [id: string]: Todo };
